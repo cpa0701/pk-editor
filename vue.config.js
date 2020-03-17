@@ -1,8 +1,18 @@
 'use strict'
-const path = require('path')
-const resolve = dir => path.join(__dirname, dir)
 module.exports = {
-  // 修改 src 目录 为 examples 目录
+  devServer: {
+    port: '8080', // 代理端口
+    proxy: {
+      '/user-api': {
+        target: 'http://42.48.104.46:15012', // 服务器 api地址
+        changeOrigin: true, // 是否跨域
+      },
+      '/group1': {
+        target: 'http://42.48.104.46:15012', // 服务器 api地址
+        changeOrigin: true // 是否跨域
+      },
+    }
+  },
   pages: {
     index: {
       entry: 'src/main.js',
@@ -10,17 +20,11 @@ module.exports = {
       filename: 'index.html'
     }
   },
-  chainWebpack: config => {
-    config.module
-      .rule('js')
-      .include
-      .add(resolve('packages'))
-      .end()
-      .use('babel')
-      .loader('babel-loader')
-      .tap(options => {
-        // 修改它的选项...
-        return options
-      })
-  }
+  configureWebpack: config => {
+    config.externals = process.env.NODE_ENV === 'production'?{
+      vue: 'Vue',
+      vuex: 'Vuex',
+      axios: 'axios'
+    }:{}
+  },
 }
