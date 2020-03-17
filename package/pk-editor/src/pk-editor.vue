@@ -8,7 +8,7 @@
   import Editor from 'tui-editor/dist/tui-editor-Editor-all'
   import Viewer from 'v-viewer/src/component.vue'
   import emojiJson from '../lib/emoji/emoji-json'
-  import {toggle} from '../../assets/js/fullScreen'
+  import {toggle} from '../lib/js/fullScreen'
 
   export default {
     name: 'PkEditor',

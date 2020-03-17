@@ -1,14 +1,20 @@
 {
   "name": "pk-editor",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "pk项目的markdown编辑器，基于tui.editor，所见即所得（wysiwyg)，增加了emoji组件和全屏组件",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib --name pk-editor --dest lib package/index.js"
   },
+  "main": "lib/pk-editor.umd.min.js",
   "dependencies": {
     "core-js": "^3.6.4",
+    "jquery": "^3.4.1",
+    "tui-editor": "^1.4.10",
+    "v-viewer": "^1.4.2",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -37,5 +43,13 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "keywords": [
+    "markdown",
+    "wysiwyg",
+    "emoji"
+  ],
+  "author": "cpa0701",
+  "license": "ISC",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
 }

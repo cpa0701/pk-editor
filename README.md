@@ -1,24 +1,3 @@
-# pk-editor
+# pk-markdown
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+pk生态服务平台markdown组件npm化版本，基于tui.editor，所见即所得（wysiwyg)，增加了emoji组件和全屏组件
