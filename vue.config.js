@@ -23,7 +23,6 @@ module.exports = {
   configureWebpack: config => {
     config.externals = process.env.NODE_ENV === 'production'?{
       vue: 'Vue',
-      vuex: 'Vuex',
       axios: 'axios'
     }:{}
   },

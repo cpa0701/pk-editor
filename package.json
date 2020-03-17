@@ -1,13 +1,13 @@
 {
   "name": "pk-markdown",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "pk项目的markdown编辑器，基于tui.editor，所见即所得（wysiwyg)，增加了emoji组件和全屏组件",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lib": "vue-cli-service build --target lib --name pk-markdown --dest lib package/index.js"
+    "lib": "vue-cli-service build --target lib --name pk-markdown --dest lib package/pk-markdown/index.js"
   },
   "main": "lib/pk-markdown.umd.min.js",
   "dependencies": {
