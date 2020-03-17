@@ -1,12 +1,5 @@
 .DS_Store
 node_modules
-package
-public
-src
-.gitignore
-babel.config.js
-vue.config.js
-yarn.lock
 /dist
 
 # local env files
@@ -26,3 +19,21 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+/src/main.js
+/package/
+/package.json
+/babel.config.js
+/src/App.vue
+/.npmignore
+/src/
+/.gitignore
+/public/
+/vue.config.js
+/yarn.lock
+/package-lock.json
+/lib/demo.html
+/lib/pk-markdown.common.js
+/lib/pk-markdown.umd.min.js.map
+/lib/pk-markdown.umd.js
+/lib/pk-markdown.umd.js.map
