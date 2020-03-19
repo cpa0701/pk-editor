@@ -21,7 +21,7 @@
 ```vue
 <template>
   <div id="app">
-    <pk-editor :upload-url="'/user-api/uploadFile/image'"/>
+    <pk-markdown :upload-url="'/user-api/uploadFile/image'" ref="pkMarkdown"/>
   </div>
 </template>
 
@@ -36,6 +36,7 @@
   }
 </script>
 ```
+通过$refs可以获得内部的editor对象，从而进一步封装大家自己的功能
 ### 3.自定义功能
 1. 图片添加预览功能
 在上传图片（指定了上传地址后）和viewer模式下调用parseImg可以对图片添加预览功能
