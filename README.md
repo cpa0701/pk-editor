@@ -14,7 +14,7 @@
 ### 1.文档地址与demo
 [tui.editor](https://nhn.github.io/tui.editor/latest/)
 
-[demo](https://github.com/cpa0701/pk-markdown/tree/master/dist/index.html)
+[demo](http://rc001.chenpengan.top/pk-markdown/)
 
 ### 2.使用
 `npm i pk-markdown`
