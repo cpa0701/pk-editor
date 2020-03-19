@@ -9,8 +9,12 @@
 
 [pk生态服务平台](https://www.ccyunchina.com/#/) markdown组件，基于tui.editor，所见即所得（wysiwyg)
 
-### 1.原文档地址与demo
-[https://nhn.github.io/tui.editor/latest/](https://nhn.github.io/tui.editor/latest/)
+项目github地址[https://github.com/cpa0701/pk-markdown.git](https://github.com/cpa0701/pk-markdown.git)
+
+### 1.文档地址与demo
+[tui.editor](https://nhn.github.io/tui.editor/latest/)
+
+[demo](https://github.com/cpa0701/pk-markdown/tree/master/dist/index.html)
 
 ### 2.使用
 `npm i pk-markdown`
