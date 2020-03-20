@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <pk-markdown :upload-url="'/user-api/uploadFile/image'"/>
+    <pk-markdown :upload-url="'/user-api/uploadFile/image'" @input-value="change"/>
+    <hr>
+    <p>页面效果如下</p>
+    <pk-markdown id="viewer" :value="value" viewer/>
   </div>
 </template>
 
@@ -11,6 +14,23 @@
     name: 'App',
     components: {
       PkMarkdown
+    },
+    data () {
+      return {
+        value: ''
+      }
+    },
+    methods: {
+      change (value) {
+        this.value = value
+      }
     }
   }
 </script>
+<style>
+  #viewer {
+    overflow: auto;
+    height: calc(100vh - 8px - 300px - (21px + 32px) - 20px);
+    border: 1px solid #ddd;
+  }
+</style>

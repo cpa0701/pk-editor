@@ -59,9 +59,9 @@
         type: String,
         default: ''
       },
-      uploadUrl:{
-        type:String,
-        default:''
+      uploadUrl: {
+        type: String,
+        default: ''
       }
     },
     data () {
@@ -73,7 +73,7 @@
           useCommandShortcut: true,
           useDefaultHTMLSanitizer: true,
           usageStatistics: false,
-          hideModeSwitch: true,
+          hideModeSwitch: false,
           toolbarItems: [
             'heading',
             'bold',
@@ -98,7 +98,7 @@
             'divider'
           ],
           placeholder: this.placeholder,
-          hooks: this.uploadUrl?{
+          hooks: this.uploadUrl ? {
             addImageBlobHook: (file, callback) => {
               const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
               myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
@@ -110,17 +110,18 @@
                 const data = res.data
                 if (data.code === 200) {
                   callback(data.data, file.name)
-                  this.parseImg()
                 } else {
-                  this.$Message&&this.$Message.error('上传失败，请稍后重试')
+                  this.$Message && this.$Message.error('上传失败，请稍后重试')
                 }
               })
             }
-          }:{},
+          } : {},
           exts: [
-            'colorSyntax'
+            'colorSyntax',
+            // this.mode === 'wysiwyg' ? '' : 'scrollSync'
           ]
-        }
+        },
+        currentMode: this.mode
       }
     },
     computed: {
@@ -161,27 +162,91 @@
       this.destroyEditor()
     },
     methods: {
-      initEditor () {
-        this.editor = Editor.factory({
+      initEditor (isChangeMode, currentValue) {
+        this.editor = Editor.factory(isChangeMode ? {
+          el: document.getElementById(this.id),
+          viewer: this.viewer,
+          minHeight: '300px',
+          previewStyle: 'vertical',
+          useCommandShortcut: true,
+          useDefaultHTMLSanitizer: true,
+          usageStatistics: false,
+          hideModeSwitch: false,
+          toolbarItems: [
+            'heading',
+            'bold',
+            'italic',
+            'strike',
+            'divider',
+            'hr',
+            'quote',
+            'divider',
+            'ul',
+            'ol',
+            'task',
+            this.currentMode === 'wysiwyg' ? '' : 'indent',
+            this.currentMode === 'wysiwyg' ? '' : 'outdent',
+            'divider',
+            'table',
+            'image',
+            'link',
+            'divider',
+            'code',
+            'codeblock',
+            'divider'
+          ],
+          placeholder: this.placeholder,
+          hooks: this.uploadUrl ? {
+            addImageBlobHook: (file, callback) => {
+              const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
+              myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
+              axios.post(this.uploadUrl, myFormData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }).then(res => {
+                const data = res.data
+                if (data.code === 200) {
+                  callback(data.data, file.name)
+                } else {
+                  this.$Message && this.$Message.error('上传失败，请稍后重试')
+                }
+              })
+            }
+          } : {},
+          exts: [
+            'colorSyntax',
+            this.currentMode === 'wysiwyg' ? '' : 'scrollSync'
+          ],
+          ...this.options,
+          initialEditType: this.currentMode,
+          height: this.height,
+          language: this.language
+        } : {
           el: document.getElementById(this.id),
           viewer: this.viewer,
           ...this.editorOptions
         })
-        if (this.value) {
-          this.setValue(this.value)
-        }
+        this.setValue(isChangeMode ? currentValue : this.value)
         if (!this.viewer) {
           // this.editor.on('change', () => {
           //   this.$emit('input', this.editor.getValue())
           // })
           this.toolbar = this.editor.getUI().getToolbar()
           this.addToolbarItem()
-          this.editor.focus()
+          !isChangeMode && this.editor.focus()
         }
         // 监听事件
         this.editor.on('change', () => {
           this.$emit('input-value', this.editor.getValue())
           this.$emit('input-html', this.editor.getHtml())
+        })
+        // 监听模式以改变缩进和减少缩进按钮
+        this.editor.on('changeMode', () => {
+          this.currentMode = this.editor.isWysiwygMode() ? 'wysiwyg' : 'markdown'
+          const value = this.editor.getValue()
+          this.destroyEditor()
+          this.initEditor(true, value)
         })
       },
       /**
@@ -197,7 +262,7 @@
       initEmojiItem () {
         const emoji = `<button class="emoji"></button>`
         // 添加emoji
-        this.toolbar.addItem({
+        this.toolbar.insertItem(this.currentMode === 'wysiwyg' ? 21 : 22, {
           type: 'button',
           options: {
             name: 'emoji',
@@ -269,7 +334,7 @@
           }
           toggle.toggleFullScreen($root[0])
         })
-        this.toolbar.addItem({
+        this.toolbar.insertItem(this.currentMode === 'wysiwyg' ? 22 : 23, {
           type: 'button',
           options: {
             name: 'fullScreen',
@@ -286,10 +351,12 @@
       },
       setValue (value) {
         this.editor.setValue(value)
-        if (this.divideImg) {
-          this.divider()
-        } else {
-          this.parseImg()
+        if (this.viewer) {
+          if (this.divideImg) {
+            this.divider()
+          } else {
+            this.parseImg()
+          }
         }
       },
       getValue () {

@@ -14,27 +14,48 @@
 ### 1.文档地址与demo
 [tui.editor](https://nhn.github.io/tui.editor/latest/)
 
-[demo](http://rc001.chenpengan.top/pk-markdown/)
+[线上demo](http://rc001.chenpengan.top/pk-markdown/)或dist目录下为demo文件
 
 ### 2.使用
 `npm i pk-markdown`
 ```vue
 <template>
   <div id="app">
-    <pk-markdown :upload-url="'/user-api/uploadFile/image'" ref="pkMarkdown"/>
+    <pk-markdown :upload-url="'/user-api/uploadFile/image'" @input-value="change"/>
+    <hr>
+    <p>页面效果如下</p>
+    <pk-markdown id="viewer" :value="value" viewer/>
   </div>
 </template>
 
 <script>
-  import PkMarkdown from "../package/pk-markdown"
+  import PkMarkdown from "pk-markdown"
 
   export default {
     name: 'App',
     components: {
       PkMarkdown
+    },
+    data () {
+      return {
+        value: ''
+      }
+    },
+    methods: {
+      change (value) {
+        this.value = value
+      }
     }
   }
 </script>
+<style>
+  #viewer {
+    overflow: auto;
+    height: calc(100vh - 8px - 300px - (21px + 32px) - 20px);
+    border: 1px solid #ddd;
+  }
+</style>
+
 ```
 通过$refs可以获得内部的editor对象，从而进一步封装大家自己的功能
 ### 3.自定义功能
@@ -70,125 +91,125 @@ parseImg (){
 
 ```javascript
 divider () {
-        setTimeout(() => {
-          $(`#${this.id}`).find('img:not(.viewer-image)').each((i, v) => {
-            const markedVue = new Vue({
-              components: {
-                Viewer
-              },
-              data () {
-                return {
-                  image: v.src
-                }
-              },
-              template: `
-                <viewer :options="{toolbar: false, title: false, navbar: false}" :images="[image]"><img :src="image"
-                                                                                                        class="viewer-image">
-                </viewer>`
-            }).$mount()
-            $(v).remove()
-            const $targetDom = $(`#${this.id}`).next('.img-list')
-            $targetDom.children().length < 9 ? $targetDom.append(markedVue.$el) : ''
-          })
-        }, 500)
-      }
+    setTimeout(() => {
+           $(`#${this.id}`).find('img:not(.viewer-image)').each((i, v) => {
+             const markedVue = new Vue({
+               components: {
+                 Viewer
+               },
+               data () {
+                 return {
+                   image: v.src
+                 }
+               },
+               template: `
+                 <viewer :options="{toolbar: false, title: false, navbar: false}" :images="[image]"><img :src="image"
+                                                                                                         class="viewer-image">
+                 </viewer>`
+             }).$mount()
+             $(v).remove()
+             const $targetDom = $(`#${this.id}`).next('.img-list')
+             $targetDom.children().length < 9 ? $targetDom.append(markedVue.$el) : ''
+           })
+         }, 500)
+         }
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200317150622672.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NwYTA3MDE=,size_16,color_FFFFFF,t_70)
 3.  添加emoji表情
 
 ```javascript
 /**
-       * 生成emoji按钮
-       */
-      initEmojiItem () {
-        const emoji = `<button class="emoji"></button>`
-        // 添加emoji
-        this.toolbar.addItem({
-          type: 'button',
-          options: {
-            name: 'emoji',
-            $el: $(emoji),
-            event: 'emojiButtonClicked',
-            tooltip: 'emoji表情'
-          }
-        })
-        const $emojiRoot = $('<ul></ul>')
-        Object.values(emojiJson).map(v => {
-          const emojiText = `&#x${v[0].substring(2)};`
-          const $emoji = $(`<li class="emoji-icon">${emojiText}</li>`)
-          $emoji.on('click', (e) => {
-            this.editor.insertText(e.target.innerHTML)
-          })
-          $emojiRoot.append($emoji)
-        })
-        // 绑定点击emoji按钮事件
-        const emojiButtonIndex = this.toolbar.indexOfItem('emoji')
-        const $button = this.toolbar.getItem(emojiButtonIndex).$el
-        this.editor.eventManager.addEventType('emojiButtonClicked')
-        this.editor.eventManager.listen('emojiButtonClicked', () => {
-          if (popup.isShow()) {
-            popup.hide()
-            return
-          }
+* 生成emoji按钮
+*/
+initEmojiItem () {
+const emoji = `<button class="emoji"></button>`
+// 添加emoji
+this.toolbar.addItem({
+  type: 'button',
+  options: {
+    name: 'emoji',
+    $el: $(emoji),
+    event: 'emojiButtonClicked',
+    tooltip: 'emoji表情'
+  }
+})
+const $emojiRoot = $('<ul></ul>')
+Object.values(emojiJson).map(v => {
+  const emojiText = `&#x${v[0].substring(2)};`
+  const $emoji = $(`<li class="emoji-icon">${emojiText}</li>`)
+  $emoji.on('click', (e) => {
+    this.editor.insertText(e.target.innerHTML)
+  })
+  $emojiRoot.append($emoji)
+})
+// 绑定点击emoji按钮事件
+const emojiButtonIndex = this.toolbar.indexOfItem('emoji')
+const $button = this.toolbar.getItem(emojiButtonIndex).$el
+this.editor.eventManager.addEventType('emojiButtonClicked')
+this.editor.eventManager.listen('emojiButtonClicked', () => {
+  if (popup.isShow()) {
+    popup.hide()
+    return
+  }
 
-          const _$button$get = $button.get(0)
-          const offsetTop = _$button$get.offsetTop
-          const offsetLeft = _$button$get.offsetLeft
+  const _$button$get = $button.get(0)
+  const offsetTop = _$button$get.offsetTop
+  const offsetLeft = _$button$get.offsetLeft
 
-          popup.$el.css({
-            top: offsetTop + $button.outerHeight(),
-            right: _$button$get.parentElement.offsetWidth - offsetLeft - _$button$get.offsetWidth
-          })
+  popup.$el.css({
+    top: offsetTop + $button.outerHeight(),
+    right: _$button$get.parentElement.offsetWidth - offsetLeft - _$button$get.offsetWidth
+  })
 
-          popup.show()
-        })
-        // 生成emoji弹框
-        const popup = this.editor.getUI().createPopup({
-          header: false,
-          title: false,
-          content: $emojiRoot,
-          className: 'emoji-list',
-          $target: this.editor.getUI().getToolbar().$el,
-          css: {
-            'width': '300px',
-            'height': '260px',
-            'position': 'absolute'
-          }
-        })
-        // 聚焦时弹框消失
-        this.editor.eventManager.listen('focus', function () {
-          popup.hide()
-        })
-      },
+  popup.show()
+})
+// 生成emoji弹框
+const popup = this.editor.getUI().createPopup({
+  header: false,
+  title: false,
+  content: $emojiRoot,
+  className: 'emoji-list',
+  $target: this.editor.getUI().getToolbar().$el,
+  css: {
+    'width': '300px',
+    'height': '260px',
+    'position': 'absolute'
+  }
+})
+// 聚焦时弹框消失
+this.editor.eventManager.listen('focus', function () {
+  popup.hide()
+})
+}
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200317150751780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NwYTA3MDE=,size_16,color_FFFFFF,t_70)
 4.  添加全屏功能
 
 ```javascript
 /**
-       * 生成全屏非全屏按钮
-       */
-      initFullScreenItem () {
-        const $root = this.editor.getUI().$el
-        this.editor.eventManager.addEventType('toggleFullScreen')
-        this.editor.eventManager.listen('toggleFullScreen', function () {
-          const $fullscreen = $($root).find('.fullscreen')
-          if ($fullscreen.hasClass('exit-fullscreen')) {
-            $fullscreen.removeClass('exit-fullscreen')
-          } else {
-            $fullscreen.addClass('exit-fullscreen')
-          }
-          toggle.toggleFullScreen($root[0])
-        })
-        this.toolbar.addItem({
-          type: 'button',
-          options: {
-            name: 'fullScreen',
-            tooltip: '全屏/非全屏',
-            event: 'toggleFullScreen',
-            $el: $('<button class="fullscreen"></button>')
-          }
-        })
-      },
+* 生成全屏非全屏按钮
+*/
+initFullScreenItem () {
+const $root = this.editor.getUI().$el
+this.editor.eventManager.addEventType('toggleFullScreen')
+this.editor.eventManager.listen('toggleFullScreen', function () {
+  const $fullscreen = $($root).find('.fullscreen')
+  if ($fullscreen.hasClass('exit-fullscreen')) {
+    $fullscreen.removeClass('exit-fullscreen')
+  } else {
+    $fullscreen.addClass('exit-fullscreen')
+  }
+  toggle.toggleFullScreen($root[0])
+})
+this.toolbar.addItem({
+  type: 'button',
+  options: {
+    name: 'fullScreen',
+    tooltip: '全屏/非全屏',
+    event: 'toggleFullScreen',
+    $el: $('<button class="fullscreen"></button>')
+  }
+})
+}
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200317150822329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NwYTA3MDE=,size_16,color_FFFFFF,t_70)
