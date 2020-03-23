@@ -35,6 +35,10 @@
 .pk-markdown /deep/ .tui-editor-defaultUI .fullscreen.exit-fullscreen {
   background-image: url(../../images/exit-fs.png);
 }
+.pk-markdown /deep/ .tui-editor-defaultUI .te-switch-button {
+  width: 120px;
+  font-size: 16px;
+}
 .pk-markdown /deep/ .viewer-image {
   cursor: pointer;
 }

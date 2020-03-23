@@ -1,6 +1,6 @@
 {
   "name": "pk-markdown",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "pk项目的markdown编辑器，基于tui.editor，所见即所得（wysiwyg)，增加了emoji组件和全屏组件",
   "private": false,
   "scripts": {
