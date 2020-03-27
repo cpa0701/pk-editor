@@ -22,7 +22,7 @@
         type: String,
         required: false,
         default () {
-          return 'markdown-editor'
+          return `markdown-editor-${Math.floor(Math.random()*100)}`
         }
       },
       options: {
