@@ -1,6 +1,9 @@
 .pk-markdown /deep/ .tui-editor-defaultUI {
   border: 0;
 }
+.pk-markdown /deep/ .tui-editor-defaultUI ul > li {
+  list-style: disc;
+}
 .pk-markdown /deep/ .tui-editor-defaultUI .emoji {
   background-image: url(../../images/emoji.png);
   background-repeat: no-repeat;
