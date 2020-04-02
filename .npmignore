@@ -19,7 +19,7 @@ yarn-error.log*
 *.sw?
 
 /src/main.js
-/package/
+/package/index.js
 /package.json
 /babel.config.js
 /src/App.vue
