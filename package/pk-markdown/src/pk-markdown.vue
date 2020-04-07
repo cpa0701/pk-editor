@@ -62,6 +62,10 @@
       uploadUrl: {
         type: String,
         default: ''
+      },
+      inputMode:{ // 是否显示为输入框模式
+        type:Boolean,
+        default:false
       }
     },
     data () {
@@ -126,7 +130,7 @@
     },
     computed: {
       editorOptions () {
-        const options = Object.assign({}, this.defaultOptions, this.options)
+        const options = Object.assign({}, this.defaultOptions, this.options,this.inputMode?{toolbarItems:[],hideModeSwitch:true,exts:[],initialEditType:'wysiwyg'}:{})
         options.initialEditType = this.mode
         options.height = this.height
         options.language = this.language
@@ -233,7 +237,7 @@
           //   this.$emit('input', this.editor.getValue())
           // })
           this.toolbar = this.editor.getUI().getToolbar()
-          this.addToolbarItem()
+          !this.inputMode&&this.addToolbarItem()
           !isChangeMode && this.editor.focus()
         }
         // 监听事件
