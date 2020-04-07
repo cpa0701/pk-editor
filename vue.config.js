@@ -13,7 +13,7 @@ module.exports = {
       },
     }
   },
-  publicPath:'.',
+  publicPath: '.',
   pages: {
     index: {
       entry: 'src/main.js',
@@ -22,9 +22,9 @@ module.exports = {
     }
   },
   configureWebpack: config => {
-    config.externals = process.env.NODE_ENV === 'production'?{
+    config.externals = process.env.NODE_ENV === 'production' ? {
       vue: 'Vue',
       axios: 'axios'
-    }:{}
+    } : {}
   },
 }

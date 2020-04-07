@@ -5,7 +5,7 @@
 import PkMarkdown from './src/pk-markdown.vue'
 
 // 为组件提供 install 安装方法，供按需引入
-PkMarkdown.install = function (Vue) {
+PkMarkdown.install = function(Vue) {
   Vue.component(PkMarkdown.name, PkMarkdown)
 }
 
