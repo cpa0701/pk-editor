@@ -11,7 +11,7 @@
 ### 1.文档地址与demo
 [tui.editor](https://nhn.github.io/tui.editor/latest/)
 
-[线上demo](https://rc001.chenpengan.top/markdown/)或dist目录下为demo文件
+[线上demo](https://rc001.chenpengan.top:81/markdown/)或dist目录下为demo文件
 
 ### 2.使用
 `npm i pk-markdown`
