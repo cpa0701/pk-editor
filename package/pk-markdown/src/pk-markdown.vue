@@ -125,6 +125,9 @@ export default {
               } else {
                 this.$Message && this.$Message.error('上传失败，请稍后重试')
               }
+            }).catch((err) => {
+              console.log(err)
+              this.$Message && this.$Message.error('上传失败，请稍后重试')
             })
           }
         } : {},
@@ -392,27 +395,34 @@ export default {
        * 对图片新增viewer组件效果
        */
     parseImg() {
-      setTimeout(() => {
-        $('.tui-editor-contents').find('img:not(.viewer-image)').each((i, v) => {
-          const style = this.getImageScale(v)
-          const markedVue = new Vue({
-            components: {
-              Viewer
-            },
-            data() {
-              return {
-                image: v.src,
-                style
-              }
-            },
-            template: `
+      this.$nextTick(() => {
+        this.timer = setInterval(() => {
+          const length = $('.tui-editor-contents').find('img:not(.viewer-image)').length
+          if (length !== 0) {
+            clearInterval(this.timer)
+            this.timer = null
+            $('.tui-editor-contents').find('img:not(.viewer-image)').each((i, v) => {
+              const style = this.getImageScale(v)
+              const markedVue = new Vue({
+                components: {
+                  Viewer
+                },
+                data() {
+                  return {
+                    image: v.src,
+                    style
+                  }
+                },
+                template: `
                 <viewer style="display: inline-block" :options="{toolbar: false, title: false, navbar: false}" :images="[image]">
                   <img :style="style" alt="${v.alt}" :src="image" class="viewer-image"/>
                 </viewer>`
-          }).$mount()
-          $(v).replaceWith(markedVue.$el)
+              }).$mount()
+              $(v).replaceWith(markedVue.$el)
+            })
+          }
         })
-      }, 500)
+      })
     },
     /**
        * 将文字与图片分开展示
