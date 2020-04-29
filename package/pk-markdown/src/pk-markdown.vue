@@ -12,7 +12,7 @@ import emojiJson from '../lib/emoji/emoji-json'
 import { toggle } from '../lib/js/fullScreen'
 
 export default {
-  name: 'PkEditor',
+  name: 'PkMarkdown',
   props: {
     value: { // 默认值
       type: String,
