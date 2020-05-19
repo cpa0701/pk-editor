@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <pk-markdown :upload-url="'/user-api/uploadFile/image'" @input-value="change" />
+    <pk-markdown :upload-url="'/user-api/uploadFile/image'" :value="value" @input-value="change" />
     <hr>
     <p>页面效果如下</p>
     <pk-markdown id="viewer" :value="value" viewer />

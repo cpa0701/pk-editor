@@ -180,6 +180,7 @@ export default {
   },
   destroyed() {
     this.destroyEditor()
+    this.editor.remove()
   },
   methods: {
     initEditor(isChangeMode, currentValue) {
@@ -367,7 +368,6 @@ export default {
     destroyEditor() {
       if (!this.editor) return
       this.editor.off('change')
-      this.editor.remove()
     },
     setValue(value) {
       this.editor.setValue(value)
