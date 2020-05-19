@@ -397,12 +397,12 @@ export default {
     parseImg() {
       this.$nextTick(() => {
         this.timer = setInterval(() => {
-          const length = $('.tui-editor-contents').find('img:not(.viewer-image)').length
+          const length = $(`#${this.id}`).find('img:not(.viewer-image)').length
           if (length !== 0) {
             clearInterval(this.timer)
             this.timer = null
-            $('.tui-editor-contents').find('img:not(.viewer-image)').each((i, v) => {
-              const style = this.getImageScale(v)
+            const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
+            $(`#${this.id}`).find('img:not(.viewer-image)').each((i, v) => {
               const markedVue = new Vue({
                 components: {
                   Viewer
@@ -450,37 +450,15 @@ export default {
           $targetDom.children().length < 9 ? $targetDom.append(markedVue.$el) : ''
         })
       }, 500)
-    },
-    /**
-       * 获取图片缩放大小
-       * @param image
-       */
-    getImageScale(image) {
-      const ratioOfImage = image.naturalWidth / image.naturalHeight
-      if (ratioOfImage > 1) { // 宽大些，宽图
-        if (image.naturalWidth > this.imageMaxWidth) { // 大于图片限制的最大宽度则进行等比缩小
-          const height = image.naturalHeight / (image.naturalWidth / this.imageMaxWidth)
-          return { width: `${this.imageMaxWidth}px`, height: `${height}px` }
-        } else {
-          return {}
-        }
-      } else { // 长大些，长图
-        if (image.naturalHeight > this.imageMaxHeight) { // 大于图片限制的最大高度则进行等比缩小
-          const width = image.naturalWidth / (image.naturalHeight / this.imageMaxHeight)
-          return { height: `${this.imageMaxHeight}px`, width: `${width}px` }
-        } else {
-          return {}
-        }
-      }
     }
   }
 }
 </script>
 <style scoped>
-    @import '../../../node_modules/viewerjs/dist/viewer.css';
-    @import '../../../node_modules/codemirror/lib/codemirror.css';
+    @import '~viewerjs/dist/viewer.css';
+    @import '~codemirror/lib/codemirror.css';
     @import "../lib/css/tui-color-picker.css";
-    @import '../../../node_modules/tui-editor/dist/tui-editor.css';
-    @import '../../../node_modules/tui-editor/dist/tui-editor-contents.css';
+    @import '~tui-editor/dist/tui-editor.css';
+    @import '~tui-editor/dist/tui-editor-contents.css';
     @import "../lib/css/index.css";
 </style>
