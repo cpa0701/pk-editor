@@ -397,12 +397,14 @@ export default {
     parseImg() {
       this.$nextTick(() => {
         this.timer = setInterval(() => {
-          const length = $(`#${this.id}`).find('img:not(.viewer-image)').length
+          const mainDom = $(`#${this.id}`)
+          const length = mainDom.find('img:not(.viewer-image)').length
           if (length !== 0) {
             clearInterval(this.timer)
             this.timer = null
             const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
-            $(`#${this.id}`).find('img:not(.viewer-image)').each((i, v) => {
+            mainDom.hide()
+            mainDom.find('img:not(.viewer-image)').each((i, v) => {
               const markedVue = new Vue({
                 components: {
                   Viewer
@@ -420,6 +422,7 @@ export default {
               }).$mount()
               $(v).replaceWith(markedVue.$el)
             })
+            mainDom.show()
           }
         })
       })
@@ -429,8 +432,10 @@ export default {
        */
     divider() {
       setTimeout(() => {
+        const mainDom = $(`#${this.id}`)
         const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
-        $(`#${this.id}`).find('img:not(.viewer-image)').each((i, v) => {
+        mainDom.hide()
+        mainDom.find('img:not(.viewer-image)').each((i, v) => {
           const markedVue = new Vue({
             components: {
               Viewer
@@ -447,8 +452,9 @@ export default {
             </viewer>`
           }).$mount()
           $(v).remove()
-          const $targetDom = $(`#${this.id}`).next('.img-list')
+          const $targetDom = mainDom.next('.img-list')
           $targetDom.children().length < 9 ? $targetDom.append(markedVue.$el) : ''
+          mainDom.show()
         })
       }, 500)
     }
