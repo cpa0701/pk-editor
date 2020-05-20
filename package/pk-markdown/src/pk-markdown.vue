@@ -429,6 +429,7 @@ export default {
        */
     divider() {
       setTimeout(() => {
+        const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
         $(`#${this.id}`).find('img:not(.viewer-image)').each((i, v) => {
           const markedVue = new Vue({
             components: {
@@ -436,14 +437,14 @@ export default {
             },
             data() {
               return {
-                image: v.src
+                image: v.src,
+                style
               }
             },
             template: `
-                  <viewer style="display: inline-block" :options="{toolbar: false, title: false, navbar: false}"
-                          :images="[image]"><img :src="image"
-                                                 class="viewer-image">
-                  </viewer>`
+            <viewer style="display: inline-block" :options="{toolbar: false, title: false, navbar: false}" :images="[image]">
+              <img :style="style" alt="${v.alt}" :src="image" class="viewer-image"/>
+            </viewer>`
           }).$mount()
           $(v).remove()
           const $targetDom = $(`#${this.id}`).next('.img-list')
