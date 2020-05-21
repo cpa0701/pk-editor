@@ -77,6 +77,39 @@ export default {
     }
   },
   data() {
+    const hooks = {}
+    if (this.uploadUrl) {
+      hooks.addImageBlobHook = (file, callback) => {
+        const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
+        myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
+        axios.post(this.uploadUrl, myFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }).then(res => {
+          const data = res.data
+          if (data.code === 200) {
+            callback(data.data, file.name)
+          } else {
+            this.$Message && this.$Message.error('上传失败，请稍后重试')
+          }
+        }).catch((err) => {
+          console.log(err)
+          this.$Message && this.$Message.error('上传失败，请稍后重试')
+        })
+      }
+    }
+    if (this.viewer) {
+      hooks.previewBeforeHook = (content) => {
+        const $result = $(content)
+        $result.find('a').each((i, v) => {
+          if ($(v).attr('href')) {
+            $(v).attr('target', '_blank')
+          }
+        })
+        return $result.html()
+      }
+    }
     return {
       editor: null,
       defaultOptions: {
@@ -110,27 +143,7 @@ export default {
           'divider'
         ],
         placeholder: this.placeholder,
-        hooks: this.uploadUrl ? {
-          addImageBlobHook: (file, callback) => {
-            const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
-            myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
-            axios.post(this.uploadUrl, myFormData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }).then(res => {
-              const data = res.data
-              if (data.code === 200) {
-                callback(data.data, file.name)
-              } else {
-                this.$Message && this.$Message.error('上传失败，请稍后重试')
-              }
-            }).catch((err) => {
-              console.log(err)
-              this.$Message && this.$Message.error('上传失败，请稍后重试')
-            })
-          }
-        } : {},
+        hooks,
         exts: [
           'colorSyntax',
           // this.mode === 'wysiwyg' ? '' : 'scrollSync'
@@ -184,6 +197,39 @@ export default {
   },
   methods: {
     initEditor(isChangeMode, currentValue) {
+      const hooks = {}
+      if (this.uploadUrl) {
+        hooks.addImageBlobHook = (file, callback) => {
+          const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
+          myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
+          axios.post(this.uploadUrl, myFormData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }).then(res => {
+            const data = res.data
+            if (data.code === 200) {
+              callback(data.data, file.name)
+            } else {
+              this.$Message && this.$Message.error('上传失败，请稍后重试')
+            }
+          }).catch((err) => {
+            console.log(err)
+            this.$Message && this.$Message.error('上传失败，请稍后重试')
+          })
+        }
+      }
+      if (this.viewer) {
+        hooks.previewBeforeHook = (content) => {
+          const $result = $(content)
+          $result.find('a').each((i, v) => {
+            if ($(v).attr('href')) {
+              $(v).attr('target', '_blank')
+            }
+          })
+          return $result.html()
+        }
+      }
       this.editor = Editor.factory(isChangeMode ? {
         el: document.getElementById(this.id),
         viewer: this.viewer,
@@ -217,24 +263,7 @@ export default {
           'divider'
         ],
         placeholder: this.placeholder,
-        hooks: this.uploadUrl ? {
-          addImageBlobHook: (file, callback) => {
-            const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
-            myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
-            axios.post(this.uploadUrl, myFormData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }).then(res => {
-              const data = res.data
-              if (data.code === 200) {
-                callback(data.data, file.name)
-              } else {
-                this.$Message && this.$Message.error('上传失败，请稍后重试')
-              }
-            })
-          }
-        } : {},
+        hooks,
         exts: [
           'colorSyntax',
           this.currentMode === 'wysiwyg' ? '' : 'scrollSync'
@@ -462,10 +491,10 @@ export default {
 }
 </script>
 <style scoped>
-    @import '~viewerjs/dist/viewer.css';
-    @import '~codemirror/lib/codemirror.css';
-    @import "../lib/css/tui-color-picker.css";
-    @import '~tui-editor/dist/tui-editor.css';
-    @import '~tui-editor/dist/tui-editor-contents.css';
-    @import "../lib/css/index.css";
+  @import '~viewerjs/dist/viewer.css';
+  @import '~codemirror/lib/codemirror.css';
+  @import "../lib/css/tui-color-picker.css";
+  @import '~tui-editor/dist/tui-editor.css';
+  @import '~tui-editor/dist/tui-editor-contents.css';
+  @import "../lib/css/index.css";
 </style>
