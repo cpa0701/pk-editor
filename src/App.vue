@@ -4,6 +4,9 @@
     <hr>
     <p>页面效果如下</p>
     <pk-markdown id="viewer" :value="value" viewer />
+    <!--    图片文字分割-->
+    <!--    <pk-markdown id="viewer" :value="value" viewer divide-img />-->
+    <!--    <div class="img-list"></div>-->
   </div>
 </template>
 

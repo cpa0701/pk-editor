@@ -197,48 +197,9 @@ export default {
   },
   methods: {
     initEditor(isChangeMode, currentValue) {
-      const hooks = {}
-      if (this.uploadUrl) {
-        hooks.addImageBlobHook = (file, callback) => {
-          const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
-          myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
-          axios.post(this.uploadUrl, myFormData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }).then(res => {
-            const data = res.data
-            if (data.code === 200) {
-              callback(data.data, file.name)
-            } else {
-              this.$Message && this.$Message.error('上传失败，请稍后重试')
-            }
-          }).catch((err) => {
-            console.log(err)
-            this.$Message && this.$Message.error('上传失败，请稍后重试')
-          })
-        }
-      }
-      if (this.viewer) {
-        hooks.previewBeforeHook = (content) => {
-          const $result = $(content)
-          $result.find('a').each((i, v) => {
-            if ($(v).attr('href')) {
-              $(v).attr('target', '_blank')
-            }
-          })
-          return $result.html()
-        }
-      }
       this.editor = Editor.factory(isChangeMode ? {
         el: document.getElementById(this.id),
         viewer: this.viewer,
-        minHeight: '300px',
-        previewStyle: 'vertical',
-        useCommandShortcut: true,
-        useDefaultHTMLSanitizer: true,
-        usageStatistics: false,
-        hideModeSwitch: false,
         toolbarItems: [
           'heading',
           'bold',
@@ -262,16 +223,12 @@ export default {
           'codeblock',
           'divider'
         ],
-        placeholder: this.placeholder,
-        hooks,
         exts: [
           'colorSyntax',
           this.currentMode === 'wysiwyg' ? '' : 'scrollSync'
         ],
-        ...this.options,
+        ...this.editorOptions,
         initialEditType: this.currentMode,
-        height: this.height,
-        language: this.language
       } : {
         el: document.getElementById(this.id),
         viewer: this.viewer,
@@ -284,7 +241,7 @@ export default {
         // })
         this.toolbar = this.editor.getUI().getToolbar()
         !this.inputMode && this.addToolbarItem()
-        !isChangeMode && this.editor.focus()
+        this.editor.focus()
       }
       // 监听事件
       this.editor.on('change', () => {
@@ -401,11 +358,7 @@ export default {
     setValue(value) {
       this.editor.setValue(value)
       if (this.viewer) {
-        if (this.divideImg) {
-          this.divider()
-        } else {
-          this.parseImg()
-        }
+        this.viewerHandle()
       }
     },
     getValue() {
@@ -421,9 +374,9 @@ export default {
       this.editor.exec(cmd)
     },
     /**
-       * 对图片新增viewer组件效果
-       */
-    parseImg() {
+     * viewer模式处理
+     */
+    viewerHandle() {
       this.$nextTick(() => {
         this.timer = setInterval(() => {
           const mainDom = $(`#${this.id}`)
@@ -449,43 +402,18 @@ export default {
                   <img :style="style" alt="${v.alt}" :src="image" class="viewer-image"/>
                 </viewer>`
               }).$mount()
-              $(v).replaceWith(markedVue.$el)
+              if (this.divideImg) {
+                $(v).remove()
+                const $targetDom = mainDom.next('.img-list')
+                $targetDom.children().length < 9 ? $targetDom.append(markedVue.$el) : ''
+              } else {
+                $(v).replaceWith(markedVue.$el)
+              }
             })
             mainDom.show()
           }
         })
       })
-    },
-    /**
-       * 将文字与图片分开展示
-       */
-    divider() {
-      setTimeout(() => {
-        const mainDom = $(`#${this.id}`)
-        const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
-        mainDom.hide()
-        mainDom.find('img:not(.viewer-image)').each((i, v) => {
-          const markedVue = new Vue({
-            components: {
-              Viewer
-            },
-            data() {
-              return {
-                image: v.src,
-                style
-              }
-            },
-            template: `
-            <viewer style="display: inline-block" :options="{toolbar: false, title: false, navbar: false}" :images="[image]">
-              <img :style="style" alt="${v.alt}" :src="image" class="viewer-image"/>
-            </viewer>`
-          }).$mount()
-          $(v).remove()
-          const $targetDom = mainDom.next('.img-list')
-          $targetDom.children().length < 9 ? $targetDom.append(markedVue.$el) : ''
-          mainDom.show()
-        })
-      }, 500)
     }
   }
 }
