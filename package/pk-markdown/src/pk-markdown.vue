@@ -284,6 +284,7 @@ export default {
         const $emoji = $(`<li class="emoji-icon">${emojiText}</li>`)
         $emoji.on('click', (e) => {
           this.editor.insertText(e.target.innerHTML)
+          popup.hide()
         })
         $emojiRoot.append($emoji)
       })
