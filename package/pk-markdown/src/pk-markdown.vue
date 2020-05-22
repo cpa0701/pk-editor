@@ -80,23 +80,27 @@ export default {
     const hooks = {}
     if (this.uploadUrl) {
       hooks.addImageBlobHook = (file, callback) => {
-        const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
-        myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
-        axios.post(this.uploadUrl, myFormData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }).then(res => {
-          const data = res.data
-          if (data.code === 200) {
-            callback(data.data, file.name)
-          } else {
+        if (this.inputMode) {
+          callback()
+        } else {
+          const myFormData = new FormData() // 根据获取到的form节点创建formdata对象
+          myFormData.append('file', file) // 后台即可根据此name捕获到前台发送的数据或文件
+          axios.post(this.uploadUrl, myFormData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }).then(res => {
+            const data = res.data
+            if (data.code === 200) {
+              callback(data.data, file.name)
+            } else {
+              this.$Message && this.$Message.error('上传失败，请稍后重试')
+            }
+          }).catch((err) => {
+            console.log(err)
             this.$Message && this.$Message.error('上传失败，请稍后重试')
-          }
-        }).catch((err) => {
-          console.log(err)
-          this.$Message && this.$Message.error('上传失败，请稍后重试')
-        })
+          })
+        }
       }
     }
     if (this.viewer) {
