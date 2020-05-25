@@ -105,13 +105,16 @@ export default {
     }
     if (this.viewer) {
       hooks.previewBeforeHook = (content) => {
-        const $result = $(content)
+        const $result = $('<div></div>')
+        $result.append(content)
         $result.find('a').each((i, v) => {
           if ($(v).attr('href')) {
             $(v).attr('target', '_blank')
           }
         })
-        return $result.html()
+        const result = $result.html()
+        $result.remove()
+        return result
       }
     }
     return {
