@@ -385,15 +385,15 @@ export default {
      * viewer模式处理
      */
     viewerHandle() {
+      const mainDom = $(`#${this.id}`)
+      mainDom.hide()
       this.$nextTick(() => {
         this.timer = setInterval(() => {
-          const mainDom = $(`#${this.id}`)
           const length = mainDom.find('img:not(.viewer-image)').length
           if (length !== 0) {
             clearInterval(this.timer)
             this.timer = null
             const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
-            mainDom.hide()
             mainDom.find('img:not(.viewer-image)').each((i, v) => {
               const markedVue = new Vue({
                 components: {
