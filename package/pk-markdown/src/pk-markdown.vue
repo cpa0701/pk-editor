@@ -388,11 +388,9 @@ export default {
       const mainDom = $(`#${this.id}`)
       mainDom.hide()
       this.$nextTick(() => {
-        this.timer = setInterval(() => {
+        setTimeout(() => {
           const length = mainDom.find('img:not(.viewer-image)').length
           if (length !== 0) {
-            clearInterval(this.timer)
-            this.timer = null
             const style = { maxHeight: this.imageMaxHeight + 'px', maxWidth: this.imageMaxWidth + 'px' }
             mainDom.find('img:not(.viewer-image)').each((i, v) => {
               const markedVue = new Vue({
@@ -418,6 +416,8 @@ export default {
                 $(v).replaceWith(markedVue.$el)
               }
             })
+            mainDom.show()
+          } else {
             mainDom.show()
           }
         })
