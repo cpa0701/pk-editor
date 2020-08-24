@@ -387,8 +387,8 @@ export default {
       this.editor.exec(cmd)
     },
     /**
-     * viewer模式处理
-     */
+       * viewer模式处理
+       */
     viewerHandle() {
       const mainDom = $(`#${this.id}`)
       mainDom.hide()
@@ -432,10 +432,10 @@ export default {
 }
 </script>
 <style scoped>
-  @import '~viewerjs/dist/viewer.css';
-  @import '~codemirror/lib/codemirror.css';
+  @import '../../../node_modules/viewerjs/dist/viewer.css';
+  @import '../../../node_modules/codemirror/lib/codemirror.css';
   @import "../lib/css/tui-color-picker.css";
-  @import '~tui-editor/dist/tui-editor.css';
-  @import '~tui-editor/dist/tui-editor-contents.css';
+  @import '../../../node_modules/tui-editor/dist/tui-editor.css';
+  @import '../../../node_modules/tui-editor/dist/tui-editor-contents.css';
   @import "../lib/css/index.css";
 </style>
