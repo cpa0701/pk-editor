@@ -12,7 +12,7 @@
   "main": "lib/pk-markdown.umd.min.js",
   "types": "index.d.ts",
   "dependencies": {
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "core-js": "3.6.4",
     "jquery": "3.4.1",
     "tui-editor": "1.4.10",
